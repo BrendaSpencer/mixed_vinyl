@@ -11,7 +11,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class MixRepository
 {
     public function __construct(
-        private HttpClientInterface $httpClient,
+        private HttpClientInterface $githubContentClient,
         private CacheInterface $cache,
         #[Autowire('%kernel.debug%')]
         private bool $isDebug
@@ -22,7 +22,7 @@ class MixRepository
     {
         return $this->cache->get('mixes_data', function (CacheItemInterface $cachItem) {
             $cachItem->expiresAfter(5);
-            $response = $this->httpClient->request('GET', 'https://raw.githubusercontent.com/SymfonyCasts/vinyl-mixes/main/mixes.json');
+            $response = $this->githubContentClient->request('GET', '/SymfonyCasts/vinyl-mixes/main/mixes.json');
             return $response->toArray();
         });
     }
